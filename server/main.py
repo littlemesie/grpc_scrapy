@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import grpc
-import time
+import time,os,multiprocessing
 from concurrent import futures
 from example import data_pb2, data_pb2_grpc
+from scrapy.crawler import CrawlerProcess
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 _HOST = 'localhost'
@@ -11,7 +12,10 @@ _PORT = '8080'
 class FormatData(data_pb2_grpc.FormatDataServicer):
     def DoFormat(self, request, context):
         str = request.text
-        print str
+        process = CrawlerProcess()
+        process.crawl('test')
+        process.start()
+        # os.system('scrapy crawl test')
         return data_pb2.Data(text=str.upper())
 
 def serve():
